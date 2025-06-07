@@ -1,6 +1,6 @@
 clusterName: ecommerce-eks
 region: us-east-2
-vpcId: vpc-
+vpcId: vpc-0eb9cd83dbeb05840
 
 image:
   tag: "v2.4.7"
