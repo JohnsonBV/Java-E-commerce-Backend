@@ -1,0 +1,22 @@
+clusterName: ecommerce-eks
+region: us-east-2
+vpcId: vpc-
+
+image:
+  tag: "v2.4.7"
+
+serviceAccount:
+  create: false
+  name: aws-load-balancer-controller
+
+replicaCount: 1
+
+containerSecurityContext:
+  allowPrivilegeEscalation: false
+
+# ✅ This disables probe checks
+podDisruptionBudget:
+  enabled: false
+
+health:
+  enabled: false
