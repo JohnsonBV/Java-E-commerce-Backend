@@ -44,13 +44,10 @@ pipeline {
 
         stage('Deploy to EKS') {
             steps {
-                withCredentials([
-                    usernamePassword(
-                        credentialsId: 'aws-lambda-creds',
-                        usernameVariable: 'AWS_ACCESS_KEY_ID',
-                        passwordVariable: 'AWS_SECRET_ACCESS_KEY'
-                    )
-                ]) {
+                withCredentials([[
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'aws-lambda-creds'
+                ]]) {
                     sh """
                         aws eks update-kubeconfig --region us-east-2 --name ecommerce-eks
                         kubectl set image deployment/ecommerce-app ecommerce-container=$DOCKER_IMAGE:$IMAGE_TAG
