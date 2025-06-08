@@ -15,13 +15,13 @@ pipeline {
 
         stage('Build with Maven') {
             steps {
-                bat 'mvn clean package -DskipTests'
+                sh 'mvn clean package -DskipTests'
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                bat "docker build -t %DOCKER_IMAGE%:%IMAGE_TAG% ."
+                sh "docker build -t %DOCKER_IMAGE%:%IMAGE_TAG% ."
             }
         }
 
@@ -34,7 +34,7 @@ pipeline {
                         passwordVariable: 'DOCKER_PASS'
                     )
                 ]) {
-                    bat """
+                    sh """
                         echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
                         docker push %DOCKER_IMAGE%:%IMAGE_TAG%
                     """
@@ -48,7 +48,7 @@ pipeline {
                     string(credentialsId: 'aws-access-key-id', variable: 'AWS_ACCESS_KEY_ID'),
                     string(credentialsId: 'aws-secret-access-key', variable: 'AWS_SECRET_ACCESS_KEY')
                 ]) {
-                    bat """
+                    sh """
                         aws eks update-kubeconfig --region us-east-2 --name ecommerce-eks
                         kubectl set image deployment/ecommerce-app ecommerce-container=%DOCKER_IMAGE%:%IMAGE_TAG%
                     """
@@ -58,7 +58,7 @@ pipeline {
 
         stage('Test kubectl') {
             steps {
-                bat 'kubectl get nodes'
+                sh 'kubectl get nodes'
             }
         }
     }
